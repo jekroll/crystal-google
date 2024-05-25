@@ -16,14 +16,14 @@ module Google::Gmail
     # sending a RAW RFC 2822 email: https://developers.google.com/gmail/api/reference/rest/v1/users.messages#Message
     # requires scope: https://www.googleapis.com/auth/gmail.send
     def send_request(user_id : String, email : String)
-      email = Base64.strict_encode(email)
+      email = Base64.urlsafe_encode(email)
 
       HTTP::Request.new(
         "POST",
-        "/upload/gmail/v1/users/#{user_id}/messages/send",
+        "/gmail/v1/users/#{user_id}/messages/send",
         HTTP::Headers{
           "Authorization" => "Bearer #{get_token}",
-          "Content-Type"  => "application/json",
+          "Content-Type"  => "message/rfc822"
         },
         {raw: email}.to_json
       )
